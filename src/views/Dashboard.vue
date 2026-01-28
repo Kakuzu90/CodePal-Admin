@@ -29,7 +29,7 @@ const data = ref([]);
                     <DataCard 
                         type="Notes" 
                         count="256" 
-                        icon="folder"
+                        icon="file-text"
                     />
                 </div>
             </div>

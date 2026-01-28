@@ -14,7 +14,8 @@ const routes = [
         name: "Dashboard",
         component: () => import("../views/Dashboard.vue"),
         meta: {
-            title: "Dashboard"
+            title: "Dashboard",
+            requiresAuth: true
         }
     },
     {
@@ -22,7 +23,8 @@ const routes = [
         name: "UserDetail",
         component: () => import("../views/UserDetail.vue"),
         meta: {
-            title: "User Detail"
+            title: "User Detail",
+            requiresAuth: true
         }
     },
     {
@@ -45,7 +47,20 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} - CodePal`;
-    next();
+    
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+    const isLoginPage = to.name === 'Login';
+    
+    if (requiresAuth && !isAuthenticated) {
+        // Redirect to login if trying to access protected route without auth
+        next({ name: 'Login' });
+    } else if (isLoginPage && isAuthenticated) {
+        // Redirect to dashboard if already authenticated and trying to access login
+        next({ name: 'Dashboard' });
+    } else {
+        next();
+    }
 });
 
 export default router;

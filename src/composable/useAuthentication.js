@@ -1,6 +1,9 @@
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { AuthService } from '../services/auth';
 
 export default function useAuthentication() {
+    const router = useRouter();
     const email = ref('');
     const password = ref('');
     const error = ref(false);
@@ -14,15 +17,50 @@ export default function useAuthentication() {
     const icons = computed(() => showPassword.value ? 'eye-off' : 'eye');
     const passwordFieldType = computed(() => showPassword.value ? 'text' : 'password');
 
+    const login = (username, userPassword) => {
+        return AuthService.login(username, userPassword);
+    };
+
+    const logout = () => {
+        AuthService.logout();
+        router.push('/');
+    };
+
+    const isAuthenticated = () => {
+        return AuthService.isAuthenticated();
+    };
+
+    const getCurrentUser = () => {
+        return AuthService.getCurrentUser();
+    };
+
     const submitForm = () => {
         if (isSubmit.value) return;
+        
+        // Reset error state
+        error.value = false;
         isSubmit.value = true;
-        console.log('form submitted');
-
+        
+        // Clear any existing timeout
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        
+        // Simulate loading delay
         timeout = setTimeout(() => {
+            const result = login(email.value, password.value);
+            
+            if (result.success) {
+                // Navigate to dashboard on successful login
+                router.push('/dashboard');
+            } else {
+                // Show error message
+                error.value = true;
+            }
+            
             isSubmit.value = false;
         }, 1000);
-    }
+    };
 
     return {
         email,
@@ -32,6 +70,10 @@ export default function useAuthentication() {
         toggleShowPassword,
         icons,
         passwordFieldType,
-        submitForm
+        submitForm,
+        login,
+        logout,
+        isAuthenticated,
+        getCurrentUser
     }
 }

@@ -59,8 +59,16 @@ const {
                     </button>
 
                     <p class="text-danger text-center mt-4" v-if="error">
-                        <strong class="fw-bolder">Failed!</strong> The credentails you entered are incorrect.
+                        <strong class="fw-bolder">Failed!</strong> The credentials you entered are incorrect.
                     </p>
+                    
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <h6 class="text-muted text-center mb-2">Demo Credentials</h6>
+                        <div class="text-center">
+                            <small class="text-muted d-block">Email: admin@codepal.com</small>
+                            <small class="text-muted d-block">Password: codepal123</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
