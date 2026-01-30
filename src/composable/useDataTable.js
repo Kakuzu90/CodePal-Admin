@@ -38,7 +38,7 @@ export default function useDataTable({
 
         const half = Math.floor(maxPages / 2);
         let start = Math.max(1, current - half);
-        let end = Math.min(start - maxPages -1, total);
+        let end = Math.min(total, start + maxPages - 1);
 
         if (end - start < maxPages - 1) {
             start = Math.max(1, end - maxPages + 1);
